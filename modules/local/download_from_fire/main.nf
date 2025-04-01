@@ -1,4 +1,4 @@
-process DOWNLOAD_ERZ {
+process DOWNLOAD_FROM_FIRE {
     tag "$accession"
     label 'process_single'
     container 'community.wave.seqera.io/library/pip_boto3_botocore_requests_retry:52fc026d39c78019'
@@ -11,6 +11,6 @@ process DOWNLOAD_ERZ {
 
     script:
     """
-    download_erz.py ${accession}
+    download_from_fire.py ${accession}
     """
 }

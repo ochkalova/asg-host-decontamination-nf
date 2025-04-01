@@ -11,7 +11,7 @@ process FIND_ROOT_GENOME {
 
     script:
     """
-    metagenomes_data_import_mgnify.py ${accession}
+    find_reference_on_asg_data_portal.py ${accession}
 
     """
 }

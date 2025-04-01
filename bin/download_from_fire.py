@@ -20,29 +20,21 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
-def main(target_accession):
-
-    handle_fasta_download(target_accession)
-    logging.info(f"Finished")
-
-def handle_fasta_download(accession):
+def main(accession):
     if not os.path.exists(DOWNLOAD_DIR):
         os.makedirs(DOWNLOAD_DIR)
         logging.debug(f"Directory {DOWNLOAD_DIR} is created")
-
     outpath = os.path.join(DOWNLOAD_DIR, f'{accession}.fa.gz')
-    if os.path.exists(outpath) and os.path.getsize(outpath) > 20:
-        logging.info(f"File {outpath} already exists, skipping download.")
-        return
     download_from_ENA_FIRE(accession, outpath)
+    logging.info(f"Finished")
+
 
 @retry(tries=5, delay=15, backoff=1.5) 
 def download_from_ENA_FIRE(accession: str, outpath: str, analysis_ftp_field="generated_ftp") -> str:
     url = get_fasta_url(accession, analysis_ftp_field=analysis_ftp_field)
     if not url:
         logging.debug(f"{accession} URL is empty for accession, ftp field: {analysis_ftp_field}")
-        return None
-        # raise ValueError(f"URL is empty, ftp field: {analysis_ftp_field}")
+        raise ValueError(f"URL is empty, ftp field: {analysis_ftp_field}")
     logging.debug(f"Download {accession} from ENA FIRE using URL {url}")
 
     fire_endpoint = "http://hl.fire.sdo.ebi.ac.uk"
@@ -55,8 +47,8 @@ def download_from_ENA_FIRE(accession: str, outpath: str, analysis_ftp_field="gen
         logging.debug(f"Successful. File saved to {outpath}")
         return outpath
     logging.debug(f"Downloaded file {outpath} has zero size. Removing the file.")
-    os.remove(outpath)
-    return None
+    raise ValueError(f"URL is empty, ftp field: {analysis_ftp_field}")
+
 
 def get_fasta_url(accession, analysis_ftp_field="generated_ftp"):
     api_endpoint = 'https://www.ebi.ac.uk/ena/portal/api/search'
