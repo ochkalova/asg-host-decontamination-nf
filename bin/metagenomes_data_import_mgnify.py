@@ -7,7 +7,7 @@ import os
 import requests
 from retry import retry
 
-ASG_API_URL = "https://portal.aquaticsymbiosisgenomics.org/api/data_portal_test"
+ASG_API_URL = "https://portal.aquaticsymbiosisgenomics.org/api/data_portal"
 PAGE_LIMIT = 10
 DOWNLOAD_DIR = "."
 
